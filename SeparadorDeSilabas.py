@@ -12,15 +12,15 @@ class SeparadorDeSilabas:
         self.grupos_consonanticos = ('br', 'cr', 'dr', 'gr', 'fr', 'kr', 'tr', 'bl', 'cl', 'gl', 'fl', 'kl', 'pl', 'pr', 'ch', 'rr', 'll')
         self.separadores = (' ', '\n', '\t')
 
-    def separar(self, texto):
+    def separar(self, texto, separador):
         resultado = ""
         palabra = ""
         for letra in texto:
             palabra += letra
             if self._es_separador(letra):
-                resultado += self._separar_palabra(palabra)
+                resultado += self._separar_palabra(palabra, separador)
                 palabra = ""
-        resultado += self._separar_palabra(palabra)
+        resultado += self._separar_palabra(palabra, separador)
         return resultado
 
     def _es_separador(self, caracter):
@@ -67,7 +67,7 @@ class SeparadorDeSilabas:
                 return index
         raise NoHayVocal
 
-    def _separar_palabra(self, palabra):
+    def _separar_palabra(self, palabra, separador):
         try:
             primera_vocal = self._buscar_vocal(palabra)
             segunda_vocal = primera_vocal + self._buscar_vocal(palabra[primera_vocal + 1:len(palabra)]) + 1
@@ -76,15 +76,15 @@ class SeparadorDeSilabas:
                     segunda_vocal = segunda_vocal + self._buscar_vocal(palabra[segunda_vocal + 1:len(palabra)]) + 1
             if segunda_vocal - primera_vocal - 1 == 2:
                 if not self._es_grupo_consonantico(palabra[primera_vocal + 1:primera_vocal + 3]):
-                    return palabra[:segunda_vocal - 1] + "-" + self._separar_palabra(palabra[segunda_vocal - 1:len(palabra)])
+                    return palabra[:segunda_vocal - 1] + separador + self._separar_palabra(palabra[segunda_vocal - 1:len(palabra)], separador)
             if segunda_vocal - primera_vocal - 1 == 3:
                 if self._es_grupo_consonantico(palabra[primera_vocal + 2:primera_vocal + 4]):
-                    return palabra[:primera_vocal + 2] + "-" + self._separar_palabra(palabra[primera_vocal + 2:len(palabra)])
+                    return palabra[:primera_vocal + 2] + separador + self._separar_palabra(palabra[primera_vocal + 2:len(palabra)], separador)
                 else:
-                    return palabra[:primera_vocal + 3] + "-" + self._separar_palabra(palabra[primera_vocal + 3:len(palabra)])
+                    return palabra[:primera_vocal + 3] + separador + self._separar_palabra(palabra[primera_vocal + 3:len(palabra)], separador)
             if segunda_vocal - primera_vocal - 1 == 4:
-                return palabra[:segunda_vocal - 2] + "-" + self._separar_palabra(palabra[segunda_vocal - 2:len(palabra)])
-            return palabra[:primera_vocal + 1] + "-" + self._separar_palabra(palabra[primera_vocal + 1:len(palabra)])
+                return palabra[:segunda_vocal - 2] + separador + self._separar_palabra(palabra[segunda_vocal - 2:len(palabra)], separador)
+            return palabra[:primera_vocal + 1] + separador + self._separar_palabra(palabra[primera_vocal + 1:len(palabra)], separador)
         except NoHayVocal:
             return palabra
 

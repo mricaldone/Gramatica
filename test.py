@@ -1,5 +1,6 @@
 import Gramatica
 
+
 def testSeparadorDeSilabas(entrada, esperado):
     try:
         salida = Gramatica.separarEnSilabas(entrada)
